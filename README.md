@@ -7,4 +7,4 @@ Learning resources:
 
 Bookmark:
 =========
-https://www.howtographql.com/basics/3-big-picture/
+https://www.howtographql.com/basics/3-big-picture/ 
