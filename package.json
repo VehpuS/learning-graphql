@@ -1,0 +1,20 @@
+{
+  "name": "learning-graphql",
+  "version": "1.0.0",
+  "description": "A combination of the server and client tutorials from howtographql",
+  "main": "server/src/index.js",
+  "repository": "git@github.com:VehpuS/learning-graphql.git",
+  "author": "Moshe Jonathan Gordon Radian <vehpus@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "graphql-yoga": "^1.14.12"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "concurrently": "3.1.0"
+  }
+}
