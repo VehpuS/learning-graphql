@@ -5,6 +5,7 @@ Learning resources:
 * https://www.howtographql.com/ / https://github.com/howtographql/howtographql
 
 
-Bookmark:
-=========
-https://www.howtographql.com/basics/3-big-picture/ 
+Useful links:
+=============
+https://www.howtographql.com/
+https://github.com/graphcool/graphql-playground
