@@ -1,4 +1,4 @@
-const feed = (parent, args, context, info) => {
+async function feed(parent, args, context, info) {
     const where = 
         args.filter ?
         {
@@ -10,7 +10,20 @@ const feed = (parent, args, context, info) => {
 
     const { skip, first, orderBy} = args
     const queryArgs = { where, skip, first, orderBy }
-    return context.db.query.links(queryArgs, info)
+    const queriedLinks = await context.db.query.links(queryArgs, `{ id }`)
+
+    const countSelectionSet = `{
+      aggregate {
+        count
+      }
+    }`
+
+    const linksConnection = await context.db.query.linksConnection({}, countSelectionSet)
+
+    return {
+        count: linksConnection.aggregate.count,
+        linkIds: queriedLinks.map(link => link.id),
+    }
 }
 
     
