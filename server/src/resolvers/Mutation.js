@@ -67,10 +67,34 @@ const post = (parent, args, context, info) =>
 //     return deletedLink
 // },
 
+async function vote(parent, args, context, info) {
+    const userId = getUserId(context)
+
+    const linkExists = await context.db.exists.Vote({
+        user: { id: userId },
+        link: { id: args.linkId },
+    })
+    if (linkExists) {
+        throw new Error(`Already voted for link: ${args.linkId}`)
+    }
+
+    return context.db.mutation.createVote(
+        {
+            data: {
+                user: { connect: { id: userId } },
+                link: { connect: { id: args.linkId } },
+            },
+        },
+        info,
+    )
+}
+
+
 const Mutation = {
     signup,
     login,
     post,
+    vote,
 }
 
 export default Mutation
