@@ -4,6 +4,7 @@ import { Prisma } from 'prisma-binding'
 import Query from './resolvers/Query'
 import Mutation from './resolvers/Mutation'
 import AuthPayload from './resolvers/AuthPayload'
+import Subscription from './resolvers/Subscription'
 
 
 const findLink = (id) => links.find(link => link.id === id)
@@ -11,6 +12,7 @@ const findLink = (id) => links.find(link => link.id === id)
 const resolvers = {
     Query,
     Mutation,
+    Subscription,
     AuthPayload,
 }
 
