@@ -1,4 +1,4 @@
-# import Link, LinkSubscriptionPayload, Vote, VoteSubscriptionPayload from "./generated/prisma.graphql"
+# import Link, LinkSubscriptionPayload, LinkOrderByInput, Vote, VoteSubscriptionPayload from "./generated/prisma.graphql"
 
 # Autherntication types are used to hide the password from external queries.
 type AuthPayload {
@@ -17,7 +17,7 @@ type User {
 
 type Query {
   info: String!
-  feed: [Link!]!
+  feed(filter: String, skip: Int, first: Int, orderBy: LinkOrderByInput): [Link!]!
   # Fetch a single link by its `id`
   # link(id: ID!): Link
 }
