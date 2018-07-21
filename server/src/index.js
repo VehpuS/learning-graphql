@@ -1,55 +1,17 @@
 import { GraphQLServer } from 'graphql-yoga'
+import { Prisma } from 'prisma-binding'
 
-let links = [{
-    id: 'link-0',
-    url: 'www.howtographql.com',
-    description: 'Fullstack tutorial for GraphQL'
-}]
-let idCount = links.length
+import Query from './resolvers/Query'
+import Mutation from './resolvers/Mutation'
+import AuthPayload from './resolvers/AuthPayload'
+
 
 const findLink = (id) => links.find(link => link.id === id)
 
 const resolvers = {
-    Query: {
-        info: () => `This is the API of a Hackernews Clone`,
-        feed: () => links,
-        link: (root, { id }) => findLink(id)
-    },
-    // because the implementation of the Link resolvers is trivial, you can actually omit them and the server will work in the same way as it did before
-    // Link: {
-    //     id: (root) => root.id,
-    //     description: (root) => root.description,
-    //     url: (root) => root.url,
-    // }
-    Mutation: {
-        post: (root, { description, url}) => {
-            const link = {
-                id: `link-${idCount++}`,
-                description,
-                url,
-            }
-            links.push(link)
-            return link
-        },
-        updateLink: (root, {id, url, description}) => {
-            links = links.map((link) =>
-                (link.id === id) ? 
-                    {
-                        ...link,
-                        url: url || link.url,
-                        description: description || link.description
-                    } :
-                    link)
-            return findLink(id)
-        },
-        deleteLink: (root, {id}) => {
-            const deletedLink = findLink(id)
-            links = links.filter(link =>
-                (link.id !== id))
-            return deletedLink
-        },
-    },
-
+    Query,
+    Mutation,
+    AuthPayload,
 }
 
 const server = new GraphQLServer({
@@ -59,7 +21,21 @@ const server = new GraphQLServer({
      * did) or by referencing a file that contains your schema definition
      * (this is what you’re doing now).
      */
-    typeDefs: './src/schema.graphql',
+    typeDefs: 'src/schema.graphql',
     resolvers,
+    resolverValidationOptions: {
+        // TODO: check why this is necessary to get no warnings
+        // Start from https://github.com/prismagraphql/prisma/issues/2225
+        requireResolversForResolveType: false,
+    },
+    context: req => ({
+        ...req,
+        db: new Prisma({
+            typeDefs: 'src/generated/prisma.graphql',
+            endpoint: 'http://localhost:4466/',
+            secret: 'mysecret123',
+            debug: true,
+        }),
+    }),
 })
 server.start(() => console.log(`Server is running on http://localhost:4000`))

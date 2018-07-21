@@ -6,4 +6,9 @@ endpoint: http://localhost:4466/
 datamodel: datamodel.graphql
 
 # You can only access the API when providing JWTs that are signed with this secret
-# secret: mysecret123
+secret: mysecret123
+
+# Deploy hook
+hooks:
+  post-deploy:
+    - graphql get-schema --project database
