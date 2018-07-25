@@ -8,6 +8,7 @@ import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
 import './styles/index.css'
+import './styles/tachyons.min.css'
 import App from './components/App'
 import { AUTH_TOKEN } from './constants'
 import registerServiceWorker from './registerServiceWorker'
