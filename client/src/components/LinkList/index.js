@@ -48,6 +48,7 @@ class LinkList extends Component {
 
     _isNewPage = () => this.props.location.pathname.includes('new')
     _getPage = () => parseInt(this.props.match.params.page, 10)
+    _getTotalPages = (count) => Math.ceil((count - 1) / LINKS_PER_PAGE)
 
     _getQueryVariables = () => {
         const isNewPage = this._isNewPage()
@@ -69,7 +70,7 @@ class LinkList extends Component {
 
     _nextPage = data => {
         const page = this._getPage()
-        if (page <= (data.feed.count - 1) / LINKS_PER_PAGE) {
+        if (page <= this._getTotalPages(data.feed.count)) {
             const nextPage = page + 1
             this.props.history.push(`/new/${nextPage}`)
         }
@@ -102,6 +103,13 @@ class LinkList extends Component {
 
                     return (
                         <React.Fragment>
+                            {this._isNewPage() && (
+                                <div className="flex ml4 mv3 gray">
+                                    <div className="pointer">
+                                        {"Page " + this._getPage() + " out of " + this._getTotalPages(data.feed.count)}
+                                    </div>
+                                </div>
+                            )}
                             {linksToRender.map((link, index) => (
                                 <Link
                                     key={link.id}
