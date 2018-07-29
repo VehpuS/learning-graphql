@@ -31,3 +31,6 @@ export const timeDifferenceForDate = (date) => {
     const updated = new Date(date).getTime()
     return timeDifference(now, updated)
 }
+
+export const getTimeDifference = (l1, l2) =>
+    new Date(l2.createdAt).getTime() - new Date(l1.createdAt).getTime()
