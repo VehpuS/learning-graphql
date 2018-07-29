@@ -10,13 +10,17 @@ import Link from '../Link'
 
 class LinkList extends Component {
     _updateCacheAfterVote = (store, createVote, linkId) => {
+        // Get queries from local cache
         const data = store.readQuery({
             query: FEED_QUERY,
             variables: this._getQueryVariables()
         })
 
+        // Find the link which was voted on and update it
         const votedLink = data.feed.links.find(link => link.id === linkId)
         votedLink.votes = createVote.link.votes
+
+        // Update the local cache
         store.writeQuery({ query: FEED_QUERY, data })
     }
 
@@ -25,7 +29,9 @@ class LinkList extends Component {
         subscribeToMore({
             document: NEW_LINKS_SUBSCRIPTION,
             updateQuery: (prev, { subscriptionData }) => {
-                if (!subscriptionData.data) return prev
+                if (!subscriptionData.data) {
+                    return prev
+                }
                 const newLink = subscriptionData.data.newLink.node
 
                 return {
