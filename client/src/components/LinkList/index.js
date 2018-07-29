@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
+import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
 
@@ -15,30 +16,34 @@ class LinkList extends Component {
         store.writeQuery({ query: FEED_QUERY, data })
     }
 
+    _subscribeToNewLinks = async () => {
+        // ... you'll implement this 🔜
+    }
+
     render() {
-        const {feedQuery} = this.props
-        if (feedQuery && feedQuery.loading) {
-            return <div>Loading</div>
-        }
+        return (<Query query={FEED_QUERY}>
+            {({ loading, error, data, subscribeToMore }) => {
+                if (loading) return <div>Fetching</div>
+                if (error) return <div>Error</div>
 
-        if (feedQuery && feedQuery.error) {
-            return <div>Error</div>
-        }
+                this._subscribeToNewLinks(subscribeToMore)
 
-        const linksToRender = feedQuery.feed.links
+                const linksToRender = data.feed.links
 
-        return (
-            <div>
-                {linksToRender.map((link, index) => (
-                    <Link
-                        key={link.id}
-                        link={link}
-                        index={index}
-                        updateStoreAfterVote={this._updateCacheAfterVote}
-                    />
-                ))}
-            </div>
-        )
+                return (
+                    <div>
+                        {linksToRender.map((link, index) => (
+                            <Link
+                                key={link.id}
+                                link={link}
+                                index={index}
+                                updateStoreAfterVote={this._updateCacheAfterVote}
+                            />
+                        ))}
+                    </div>
+                )
+            }}
+        </Query>)
     }
 }
 
@@ -65,4 +70,4 @@ export const FEED_QUERY = gql`
   }
 `
 
-export default graphql(FEED_QUERY, { name: 'feedQuery' })(LinkList)
+export default LinkList

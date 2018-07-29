@@ -45,12 +45,6 @@ class Link extends Component {
             </div>
         )
     }
-
-
-    _voteForLink = async () => {
-        // ... you'll implement this in chapter 6
-        return null
-    }
 }
 
 const VOTE_MUTATION = gql`
