@@ -62,8 +62,8 @@ class Login extends Component {
         )
     }
 
-    _confirm = async ({ login, signup }) => {
-        const { token } = this.state.login ? login : signup
+    _confirm = async ({ loginPassword, signupPassword }) => {
+        const { token } = this.state.login ? loginPassword : signupPassword
         this._saveUserData(token)
         this.props.history.push(`/`)
     }
@@ -76,7 +76,7 @@ class Login extends Component {
 
 const SIGNUP_MUTATION = gql`
   mutation SignupMutation($email: String!, $password: String!, $name: String!) {
-    signup(email: $email, password: $password, name: $name) {
+    signupPassword(email: $email, password: $password, name: $name) {
       token
     }
   }
@@ -84,7 +84,7 @@ const SIGNUP_MUTATION = gql`
 
 const LOGIN_MUTATION = gql`
   mutation LoginMutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
+    loginPassword(email: $email, password: $password) {
       token
     }
   }

@@ -7,9 +7,6 @@ import AuthPayload from './resolvers/AuthPayload'
 import Feed from './resolvers/Feed'
 import Subscription from './resolvers/Subscription'
 
-
-const findLink = (id) => links.find(link => link.id === id)
-
 const resolvers = {
     Query,
     Mutation,

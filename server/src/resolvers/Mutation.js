@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { APP_SECRET, getUserId } = require('../utils')
 
-async function signup(parent, args, context, info) {
+async function signupPassword(parent, args, context, info) {
     const password = await bcrypt.hash(args.password, 10)
     const user = await context.db.mutation.createUser({
         data: { ...args, password },
@@ -16,7 +16,7 @@ async function signup(parent, args, context, info) {
     }
 }
 
-async function login(parent, args, context, info) {
+async function loginPassword(parent, args, context, info) {
     const loginErr = new Error("Incorrect user or password")
 
     const user = await context.db.query.user({ where: { email: args.email } }, ` { id password } `)
@@ -91,8 +91,8 @@ async function vote(parent, args, context, info) {
 
 
 const Mutation = {
-    signup,
-    login,
+    signupPassword,
+    loginPassword,
     post,
     vote,
 }
