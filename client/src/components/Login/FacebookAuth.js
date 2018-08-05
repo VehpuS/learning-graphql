@@ -38,9 +38,6 @@ class FacebookAuth extends React.Component {
         js.id = id
         js.src = `https://connect.facebook.net/en_US/sdk.js`
         fjs.parentNode.insertBefore(js, fjs)
-        console.log(window.FB)
-        console.log(fjs)
-        console.log(js)
     }
     _initializeFacebookSDK() {
         console.log("Initizliaing facebook SDK.")
@@ -62,7 +59,6 @@ class FacebookAuth extends React.Component {
         }, { scope: 'email,public_profile' })
 
     _facebookCallback = (facebookResponse, mutation) => {
-        console.log(facebookResponse)
         return (facebookResponse.status === 'connected' &&
                 facebookResponse.authResponse &&
                 facebookResponse.authResponse.accessToken) ?
