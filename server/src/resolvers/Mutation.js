@@ -1,8 +1,38 @@
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const { APP_SECRET, getUserId } = require('../utils')
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import {
+    APP_SECRET,
+    getUserId,
+    getUserByEmail
+} from '../utils'
 
-async function signupPassword(parent, args, context, info) {
+
+const getUserInfoFromFacebook = async (facebookToken) => {
+    const response = await fetch(`https://graph.facebook.com/v2.9/me?fields=id%2Cemail&access_token=${facebookToken}`)
+    const parsedResponse = response.json()
+    if (parsedResponse.error) {
+        return Promise.reject(parsedResponse.error.message)
+    } else {
+        return parsedResponse
+    }
+}
+
+const getSocialProviderInfoByToken = async (provider, token) => {
+    let getInfoByToken
+
+    switch (provider) {
+        case 'facebook':
+            getInfoByToken = getUserInfoFromFacebook
+            break
+        default:
+            throw new Error(`Unknown provider ${provider}`)
+    }
+
+    const userInfo = await getInfoByToken(token)
+    return userInfo
+}
+
+const signupPassword = async (parent, args, context, info) => {
     const password = await bcrypt.hash(args.password, 10)
     const user = await context.db.mutation.createUser({
         data: { ...args, password },
@@ -16,16 +46,66 @@ async function signupPassword(parent, args, context, info) {
     }
 }
 
-async function loginPassword(parent, args, context, info) {
+const signupSocialProvider = async (parent, args, context, info) => {
+    const { provider, providerToken } = args
+    const userInfo = await getSocialProviderInfoByToken(provider, providerToken)
+    const {id, email} = userInfo
+
+    const user = await context.db.mutation.upsertUser({
+        where: { email },
+        create: { email, [provider]: { create: { socialID: id } } },
+        update: { [provider]: { create: { socialID: id } } },
+    }, `{ id }`)
+
+    const token = jwt.sign({ userId: user.id }, APP_SECRET)
+
+    return {
+        token,
+        user,
+    }
+}
+
+const loginPassword = async (parent, args, context, info) => {
     const loginErr = new Error("Incorrect user or password")
 
-    const user = await context.db.query.user({ where: { email: args.email } }, ` { id password } `)
-    if (!user) {
-        throw loginErr
-    }
+    const user = await getUserByEmail(context.db, args.email, ` { id password } `, loginErr)
 
     const valid = await bcrypt.compare(args.password, user.password)
     if (!valid) {
+        throw loginErr
+    }
+
+    const token = jwt.sign({ userId: user.id }, APP_SECRET)
+
+    return {
+        token,
+        user,
+    }
+}
+
+const loginSocialProvider = async (parent, args, context, info) => {
+    const { provider, providerToken } = args
+    const loginErr = new Error(`Failed to login user using ${provider}. Make sure your account is linked to this service.`)
+    const userInfo = await getSocialProviderInfoByToken(provider, providerToken)
+    const user = await getUserByEmail(
+        context.db,
+        userInfo.email,
+        `
+        {
+            id
+            name
+            email
+            ${provider} {
+                socialID
+            }
+        }
+        `,
+        loginErr
+    )
+
+    const valid = user[provider] && (user[provider].socialID === userInfo.id)
+    if (!valid) {
+        console.error(user, provider, user[provider], user[provider].socialID, userInfo.id)
         throw loginErr
     }
 
@@ -92,7 +172,9 @@ async function vote(parent, args, context, info) {
 
 const Mutation = {
     signupPassword,
+    signupSocialProvider,
     loginPassword,
+    loginSocialProvider,
     post,
     vote,
 }

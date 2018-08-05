@@ -12,7 +12,21 @@ const getUserId = (context) => {
     throw new Error('Not authenticated')
 }
 
+const getUserByEmail = async (db, email, query, loginErr) => {
+    const user = await db.query.user(
+        {
+            where: { email: email }
+        },
+        query
+    )
+    if (!user) {
+        throw loginErr
+    }
+    return user
+}
+
 export {
     APP_SECRET,
     getUserId,
+    getUserByEmail,
 }

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
+import FacebookAuth from './FacebookAuth'
 import { AUTH_TOKEN } from '../../constants'
 
 class Login extends Component {
@@ -51,6 +52,7 @@ class Login extends Component {
                             </div>
                         )}
                     </Mutation>
+                    <FacebookAuth login={login} />
                     <div
                         className="pointer button"
                         onClick={() => this.setState({ login: !login })}

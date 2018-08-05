@@ -7,26 +7,24 @@ type Link {
   votes: [Vote!]!
 }
 
-type SocialIDProvider {
+type SocialIDProviderInfo {
   id: ID! @unique
-  token: String!
-  tokenSecret: String!
-  providerID: String!
+  socialID: String!
   imageURL: String
 }
 
 type User {
   id: ID! @unique
-  name: String!
+  name: String
   email: String! @unique
-  password: String!
+  password: String
   links: [Link!]!
   votes: [Vote!]!
-  facebook: SocialIDProvider  @relation(name: "Facebook")
-  twitter: SocialIDProvider @relation(name: "Twitter")
-  linkedin: SocialIDProvider @relation(name: "Linkedin")
-  github: SocialIDProvider @relation(name: "Github")
-  instagram: SocialIDProvider @relation(name: "Instagram")
+  facebook: SocialIDProviderInfo  @relation(name: "Facebook")
+  twitter: SocialIDProviderInfo @relation(name: "Twitter")
+  linkedin: SocialIDProviderInfo @relation(name: "Linkedin")
+  github: SocialIDProviderInfo @relation(name: "Github")
+  instagram: SocialIDProviderInfo @relation(name: "Instagram")
 }
 
 type Vote {

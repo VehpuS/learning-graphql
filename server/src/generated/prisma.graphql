@@ -1,7 +1,11 @@
 # source: http://localhost:4466
-# timestamp: Sat Jul 21 2018 15:13:51 GMT+0300 (IDT)
+# timestamp: Sun Aug 05 2018 08:28:31 GMT+0300 (IDT)
 
 type AggregateLink {
+  count: Int!
+}
+
+type AggregateSocialIDProviderInfo {
   count: Int!
 }
 
@@ -359,21 +363,27 @@ type Mutation {
   createLink(data: LinkCreateInput!): Link!
   createUser(data: UserCreateInput!): User!
   createVote(data: VoteCreateInput!): Vote!
+  createSocialIDProviderInfo(data: SocialIDProviderInfoCreateInput!): SocialIDProviderInfo!
   updateLink(data: LinkUpdateInput!, where: LinkWhereUniqueInput!): Link
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateVote(data: VoteUpdateInput!, where: VoteWhereUniqueInput!): Vote
+  updateSocialIDProviderInfo(data: SocialIDProviderInfoUpdateInput!, where: SocialIDProviderInfoWhereUniqueInput!): SocialIDProviderInfo
   deleteLink(where: LinkWhereUniqueInput!): Link
   deleteUser(where: UserWhereUniqueInput!): User
   deleteVote(where: VoteWhereUniqueInput!): Vote
+  deleteSocialIDProviderInfo(where: SocialIDProviderInfoWhereUniqueInput!): SocialIDProviderInfo
   upsertLink(where: LinkWhereUniqueInput!, create: LinkCreateInput!, update: LinkUpdateInput!): Link!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertVote(where: VoteWhereUniqueInput!, create: VoteCreateInput!, update: VoteUpdateInput!): Vote!
+  upsertSocialIDProviderInfo(where: SocialIDProviderInfoWhereUniqueInput!, create: SocialIDProviderInfoCreateInput!, update: SocialIDProviderInfoUpdateInput!): SocialIDProviderInfo!
   updateManyLinks(data: LinkUpdateInput!, where: LinkWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyVotes(data: VoteUpdateInput!, where: VoteWhereInput): BatchPayload!
+  updateManySocialIDProviderInfoes(data: SocialIDProviderInfoUpdateInput!, where: SocialIDProviderInfoWhereInput): BatchPayload!
   deleteManyLinks(where: LinkWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyVotes(where: VoteWhereInput): BatchPayload!
+  deleteManySocialIDProviderInfoes(where: SocialIDProviderInfoWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -407,12 +417,15 @@ type Query {
   links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote]!
+  socialIDProviderInfoes(where: SocialIDProviderInfoWhereInput, orderBy: SocialIDProviderInfoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [SocialIDProviderInfo]!
   link(where: LinkWhereUniqueInput!): Link
   user(where: UserWhereUniqueInput!): User
   vote(where: VoteWhereUniqueInput!): Vote
+  socialIDProviderInfo(where: SocialIDProviderInfoWhereUniqueInput!): SocialIDProviderInfo
   linksConnection(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LinkConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   votesConnection(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): VoteConnection!
+  socialIDProviderInfoesConnection(where: SocialIDProviderInfoWhereInput, orderBy: SocialIDProviderInfoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): SocialIDProviderInfoConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -421,19 +434,292 @@ type Query {
   ): Node
 }
 
+type SocialIDProviderInfo implements Node {
+  id: ID!
+  socialID: String!
+  imageURL: String
+}
+
+"""A connection to a list of items."""
+type SocialIDProviderInfoConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [SocialIDProviderInfoEdge]!
+  aggregate: AggregateSocialIDProviderInfo!
+}
+
+input SocialIDProviderInfoCreateInput {
+  socialID: String!
+  imageURL: String
+}
+
+input SocialIDProviderInfoCreateOneInput {
+  create: SocialIDProviderInfoCreateInput
+  connect: SocialIDProviderInfoWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type SocialIDProviderInfoEdge {
+  """The item at the end of the edge."""
+  node: SocialIDProviderInfo!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum SocialIDProviderInfoOrderByInput {
+  id_ASC
+  id_DESC
+  socialID_ASC
+  socialID_DESC
+  imageURL_ASC
+  imageURL_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type SocialIDProviderInfoPreviousValues {
+  id: ID!
+  socialID: String!
+  imageURL: String
+}
+
+type SocialIDProviderInfoSubscriptionPayload {
+  mutation: MutationType!
+  node: SocialIDProviderInfo
+  updatedFields: [String!]
+  previousValues: SocialIDProviderInfoPreviousValues
+}
+
+input SocialIDProviderInfoSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [SocialIDProviderInfoSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [SocialIDProviderInfoSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [SocialIDProviderInfoSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: SocialIDProviderInfoWhereInput
+}
+
+input SocialIDProviderInfoUpdateDataInput {
+  socialID: String
+  imageURL: String
+}
+
+input SocialIDProviderInfoUpdateInput {
+  socialID: String
+  imageURL: String
+}
+
+input SocialIDProviderInfoUpdateOneInput {
+  create: SocialIDProviderInfoCreateInput
+  connect: SocialIDProviderInfoWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: SocialIDProviderInfoUpdateDataInput
+  upsert: SocialIDProviderInfoUpsertNestedInput
+}
+
+input SocialIDProviderInfoUpsertNestedInput {
+  update: SocialIDProviderInfoUpdateDataInput!
+  create: SocialIDProviderInfoCreateInput!
+}
+
+input SocialIDProviderInfoWhereInput {
+  """Logical AND on all given filters."""
+  AND: [SocialIDProviderInfoWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [SocialIDProviderInfoWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [SocialIDProviderInfoWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  socialID: String
+
+  """All values that are not equal to given value."""
+  socialID_not: String
+
+  """All values that are contained in given list."""
+  socialID_in: [String!]
+
+  """All values that are not contained in given list."""
+  socialID_not_in: [String!]
+
+  """All values less than the given value."""
+  socialID_lt: String
+
+  """All values less than or equal the given value."""
+  socialID_lte: String
+
+  """All values greater than the given value."""
+  socialID_gt: String
+
+  """All values greater than or equal the given value."""
+  socialID_gte: String
+
+  """All values containing the given string."""
+  socialID_contains: String
+
+  """All values not containing the given string."""
+  socialID_not_contains: String
+
+  """All values starting with the given string."""
+  socialID_starts_with: String
+
+  """All values not starting with the given string."""
+  socialID_not_starts_with: String
+
+  """All values ending with the given string."""
+  socialID_ends_with: String
+
+  """All values not ending with the given string."""
+  socialID_not_ends_with: String
+  imageURL: String
+
+  """All values that are not equal to given value."""
+  imageURL_not: String
+
+  """All values that are contained in given list."""
+  imageURL_in: [String!]
+
+  """All values that are not contained in given list."""
+  imageURL_not_in: [String!]
+
+  """All values less than the given value."""
+  imageURL_lt: String
+
+  """All values less than or equal the given value."""
+  imageURL_lte: String
+
+  """All values greater than the given value."""
+  imageURL_gt: String
+
+  """All values greater than or equal the given value."""
+  imageURL_gte: String
+
+  """All values containing the given string."""
+  imageURL_contains: String
+
+  """All values not containing the given string."""
+  imageURL_not_contains: String
+
+  """All values starting with the given string."""
+  imageURL_starts_with: String
+
+  """All values not starting with the given string."""
+  imageURL_not_starts_with: String
+
+  """All values ending with the given string."""
+  imageURL_ends_with: String
+
+  """All values not ending with the given string."""
+  imageURL_not_ends_with: String
+  _MagicalBackRelation_Twitter_every: UserWhereInput
+  _MagicalBackRelation_Twitter_some: UserWhereInput
+  _MagicalBackRelation_Twitter_none: UserWhereInput
+  _MagicalBackRelation_Linkedin_every: UserWhereInput
+  _MagicalBackRelation_Linkedin_some: UserWhereInput
+  _MagicalBackRelation_Linkedin_none: UserWhereInput
+  _MagicalBackRelation_Instagram_every: UserWhereInput
+  _MagicalBackRelation_Instagram_some: UserWhereInput
+  _MagicalBackRelation_Instagram_none: UserWhereInput
+  _MagicalBackRelation_Github_every: UserWhereInput
+  _MagicalBackRelation_Github_some: UserWhereInput
+  _MagicalBackRelation_Github_none: UserWhereInput
+  _MagicalBackRelation_Facebook_every: UserWhereInput
+  _MagicalBackRelation_Facebook_some: UserWhereInput
+  _MagicalBackRelation_Facebook_none: UserWhereInput
+}
+
+input SocialIDProviderInfoWhereUniqueInput {
+  id: ID
+}
+
 type Subscription {
   link(where: LinkSubscriptionWhereInput): LinkSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   vote(where: VoteSubscriptionWhereInput): VoteSubscriptionPayload
+  socialIDProviderInfo(where: SocialIDProviderInfoSubscriptionWhereInput): SocialIDProviderInfoSubscriptionPayload
 }
 
 type User implements Node {
   id: ID!
-  name: String!
+  name: String
   email: String!
-  password: String!
+  password: String
   links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link!]
   votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote!]
+  facebook(where: SocialIDProviderInfoWhereInput): SocialIDProviderInfo
+  twitter(where: SocialIDProviderInfoWhereInput): SocialIDProviderInfo
+  linkedin(where: SocialIDProviderInfoWhereInput): SocialIDProviderInfo
+  github(where: SocialIDProviderInfoWhereInput): SocialIDProviderInfo
+  instagram(where: SocialIDProviderInfoWhereInput): SocialIDProviderInfo
 }
 
 """A connection to a list of items."""
@@ -447,11 +733,16 @@ type UserConnection {
 }
 
 input UserCreateInput {
-  name: String!
+  name: String
   email: String!
-  password: String!
+  password: String
   links: LinkCreateManyWithoutPostedByInput
   votes: VoteCreateManyWithoutUserInput
+  facebook: SocialIDProviderInfoCreateOneInput
+  twitter: SocialIDProviderInfoCreateOneInput
+  linkedin: SocialIDProviderInfoCreateOneInput
+  github: SocialIDProviderInfoCreateOneInput
+  instagram: SocialIDProviderInfoCreateOneInput
 }
 
 input UserCreateOneWithoutLinksInput {
@@ -465,17 +756,27 @@ input UserCreateOneWithoutVotesInput {
 }
 
 input UserCreateWithoutLinksInput {
-  name: String!
+  name: String
   email: String!
-  password: String!
+  password: String
   votes: VoteCreateManyWithoutUserInput
+  facebook: SocialIDProviderInfoCreateOneInput
+  twitter: SocialIDProviderInfoCreateOneInput
+  linkedin: SocialIDProviderInfoCreateOneInput
+  github: SocialIDProviderInfoCreateOneInput
+  instagram: SocialIDProviderInfoCreateOneInput
 }
 
 input UserCreateWithoutVotesInput {
-  name: String!
+  name: String
   email: String!
-  password: String!
+  password: String
   links: LinkCreateManyWithoutPostedByInput
+  facebook: SocialIDProviderInfoCreateOneInput
+  twitter: SocialIDProviderInfoCreateOneInput
+  linkedin: SocialIDProviderInfoCreateOneInput
+  github: SocialIDProviderInfoCreateOneInput
+  instagram: SocialIDProviderInfoCreateOneInput
 }
 
 """An edge in a connection."""
@@ -504,9 +805,9 @@ enum UserOrderByInput {
 
 type UserPreviousValues {
   id: ID!
-  name: String!
+  name: String
   email: String!
-  password: String!
+  password: String
 }
 
 type UserSubscriptionPayload {
@@ -554,6 +855,11 @@ input UserUpdateInput {
   password: String
   links: LinkUpdateManyWithoutPostedByInput
   votes: VoteUpdateManyWithoutUserInput
+  facebook: SocialIDProviderInfoUpdateOneInput
+  twitter: SocialIDProviderInfoUpdateOneInput
+  linkedin: SocialIDProviderInfoUpdateOneInput
+  github: SocialIDProviderInfoUpdateOneInput
+  instagram: SocialIDProviderInfoUpdateOneInput
 }
 
 input UserUpdateOneWithoutLinksInput {
@@ -578,6 +884,11 @@ input UserUpdateWithoutLinksDataInput {
   email: String
   password: String
   votes: VoteUpdateManyWithoutUserInput
+  facebook: SocialIDProviderInfoUpdateOneInput
+  twitter: SocialIDProviderInfoUpdateOneInput
+  linkedin: SocialIDProviderInfoUpdateOneInput
+  github: SocialIDProviderInfoUpdateOneInput
+  instagram: SocialIDProviderInfoUpdateOneInput
 }
 
 input UserUpdateWithoutVotesDataInput {
@@ -585,6 +896,11 @@ input UserUpdateWithoutVotesDataInput {
   email: String
   password: String
   links: LinkUpdateManyWithoutPostedByInput
+  facebook: SocialIDProviderInfoUpdateOneInput
+  twitter: SocialIDProviderInfoUpdateOneInput
+  linkedin: SocialIDProviderInfoUpdateOneInput
+  github: SocialIDProviderInfoUpdateOneInput
+  instagram: SocialIDProviderInfoUpdateOneInput
 }
 
 input UserUpsertWithoutLinksInput {
@@ -772,6 +1088,11 @@ input UserWhereInput {
   votes_every: VoteWhereInput
   votes_some: VoteWhereInput
   votes_none: VoteWhereInput
+  facebook: SocialIDProviderInfoWhereInput
+  twitter: SocialIDProviderInfoWhereInput
+  linkedin: SocialIDProviderInfoWhereInput
+  github: SocialIDProviderInfoWhereInput
+  instagram: SocialIDProviderInfoWhereInput
 }
 
 input UserWhereUniqueInput {

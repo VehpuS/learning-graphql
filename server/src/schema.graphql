@@ -6,9 +6,8 @@ type AuthPayload {
   user: User
 }
 
-type SocialIDProvider {
-  id: ID!
-  providerID: String!
+type SocialIDProviderInfo {
+  socialID: String!
   imageURL: String
 }
 
@@ -22,15 +21,15 @@ enum Provider {
 
 type User {
   id: ID!
-  name: String!
+  name: String
   email: String!
   links: [Link!]!
   votes: [Vote!]!
-  facebook: SocialIDProvider
-  twitter: SocialIDProvider
-  linkedin: SocialIDProvider
-  github: SocialIDProvider
-  instagram: SocialIDProvider
+  facebook: SocialIDProviderInfo
+  twitter: SocialIDProviderInfo
+  linkedin: SocialIDProviderInfo
+  github: SocialIDProviderInfo
+  instagram: SocialIDProviderInfo
 }
 
 fragment socialIDs on User {
@@ -64,8 +63,9 @@ type Mutation {
 
   # User mutations
   signupPassword(email: String!, password: String!, name: String!): AuthPayload
+  signupSocialProvider(provider: Provider!, providerToken: String!): AuthPayload
   loginPassword(email: String!, password: String!): AuthPayload
-  loginSocialProvider(email: String!, provider: Provider!, token: String!, tokenSecret: String!, providerID: String!): AuthPayload
+  loginSocialProvider(provider: Provider!, providerToken: String!): AuthPayload
   vote(linkId: ID!): Vote
 }
 
