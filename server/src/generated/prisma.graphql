@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun Aug 05 2018 08:28:31 GMT+0300 (IDT)
+# timestamp: Sun Aug 05 2018 21:56:22 GMT+0300 (IDT)
 
 type AggregateLink {
   count: Int!
@@ -695,6 +695,9 @@ input SocialIDProviderInfoWhereInput {
   _MagicalBackRelation_Facebook_every: UserWhereInput
   _MagicalBackRelation_Facebook_some: UserWhereInput
   _MagicalBackRelation_Facebook_none: UserWhereInput
+  _MagicalBackRelation_Google_every: UserWhereInput
+  _MagicalBackRelation_Google_some: UserWhereInput
+  _MagicalBackRelation_Google_none: UserWhereInput
 }
 
 input SocialIDProviderInfoWhereUniqueInput {
@@ -716,6 +719,7 @@ type User implements Node {
   links(where: LinkWhereInput, orderBy: LinkOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Link!]
   votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote!]
   facebook(where: SocialIDProviderInfoWhereInput): SocialIDProviderInfo
+  google(where: SocialIDProviderInfoWhereInput): SocialIDProviderInfo
   twitter(where: SocialIDProviderInfoWhereInput): SocialIDProviderInfo
   linkedin(where: SocialIDProviderInfoWhereInput): SocialIDProviderInfo
   github(where: SocialIDProviderInfoWhereInput): SocialIDProviderInfo
@@ -739,6 +743,7 @@ input UserCreateInput {
   links: LinkCreateManyWithoutPostedByInput
   votes: VoteCreateManyWithoutUserInput
   facebook: SocialIDProviderInfoCreateOneInput
+  google: SocialIDProviderInfoCreateOneInput
   twitter: SocialIDProviderInfoCreateOneInput
   linkedin: SocialIDProviderInfoCreateOneInput
   github: SocialIDProviderInfoCreateOneInput
@@ -761,6 +766,7 @@ input UserCreateWithoutLinksInput {
   password: String
   votes: VoteCreateManyWithoutUserInput
   facebook: SocialIDProviderInfoCreateOneInput
+  google: SocialIDProviderInfoCreateOneInput
   twitter: SocialIDProviderInfoCreateOneInput
   linkedin: SocialIDProviderInfoCreateOneInput
   github: SocialIDProviderInfoCreateOneInput
@@ -773,6 +779,7 @@ input UserCreateWithoutVotesInput {
   password: String
   links: LinkCreateManyWithoutPostedByInput
   facebook: SocialIDProviderInfoCreateOneInput
+  google: SocialIDProviderInfoCreateOneInput
   twitter: SocialIDProviderInfoCreateOneInput
   linkedin: SocialIDProviderInfoCreateOneInput
   github: SocialIDProviderInfoCreateOneInput
@@ -856,6 +863,7 @@ input UserUpdateInput {
   links: LinkUpdateManyWithoutPostedByInput
   votes: VoteUpdateManyWithoutUserInput
   facebook: SocialIDProviderInfoUpdateOneInput
+  google: SocialIDProviderInfoUpdateOneInput
   twitter: SocialIDProviderInfoUpdateOneInput
   linkedin: SocialIDProviderInfoUpdateOneInput
   github: SocialIDProviderInfoUpdateOneInput
@@ -885,6 +893,7 @@ input UserUpdateWithoutLinksDataInput {
   password: String
   votes: VoteUpdateManyWithoutUserInput
   facebook: SocialIDProviderInfoUpdateOneInput
+  google: SocialIDProviderInfoUpdateOneInput
   twitter: SocialIDProviderInfoUpdateOneInput
   linkedin: SocialIDProviderInfoUpdateOneInput
   github: SocialIDProviderInfoUpdateOneInput
@@ -897,6 +906,7 @@ input UserUpdateWithoutVotesDataInput {
   password: String
   links: LinkUpdateManyWithoutPostedByInput
   facebook: SocialIDProviderInfoUpdateOneInput
+  google: SocialIDProviderInfoUpdateOneInput
   twitter: SocialIDProviderInfoUpdateOneInput
   linkedin: SocialIDProviderInfoUpdateOneInput
   github: SocialIDProviderInfoUpdateOneInput
@@ -1089,6 +1099,7 @@ input UserWhereInput {
   votes_some: VoteWhereInput
   votes_none: VoteWhereInput
   facebook: SocialIDProviderInfoWhereInput
+  google: SocialIDProviderInfoWhereInput
   twitter: SocialIDProviderInfoWhereInput
   linkedin: SocialIDProviderInfoWhereInput
   github: SocialIDProviderInfoWhereInput

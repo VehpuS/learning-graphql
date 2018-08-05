@@ -17,12 +17,28 @@ const getUserInfoFromFacebook = async (facebookToken) => {
     }
 }
 
+const getUserInfoFromGoogle = async (googleToken) => {
+    const response = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${googleToken}`)
+    const parsedResponse = await response.json()
+    if (parsedResponse.error_description) {
+        return Promise.reject(parsedResponse.error_description)
+    } else {
+        return {
+            id: parsedResponse.sub,
+            email: parsedResponse.email
+        }
+    }
+}
+
 const getSocialProviderInfoByToken = async (provider, token) => {
     let getInfoByToken
 
     switch (provider) {
         case 'facebook':
             getInfoByToken = getUserInfoFromFacebook
+            break
+        case 'google':
+            getInfoByToken = getUserInfoFromGoogle
             break
         default:
             throw new Error(`Unknown provider ${provider}`)
@@ -49,13 +65,22 @@ const signupPassword = async (parent, args, context, info) => {
 const signupSocialProvider = async (parent, args, context, info) => {
     const { provider, providerToken } = args
     const userInfo = await getSocialProviderInfoByToken(provider, providerToken)
+    console.log("GOOGLE USER RESPONSE", userInfo)
     const {id, email} = userInfo
+    if (!id || !email) {
+        throw new Error(`Failed to confirm user from ${provider}`)
+    }
 
-    const user = await context.db.mutation.upsertUser({
+    let user = await context.db.mutation.upsertUser({
         where: { email },
         create: { email, [provider]: { create: { socialID: id } } },
         update: { [provider]: { create: { socialID: id } } },
     }, `{ id }`)
+
+    user = await context.db.mutation.updateUser({
+        where: { id: user.id },
+        data: { [provider]: { create: { socialID: id } } },
+    })
 
     const token = jwt.sign({ userId: user.id }, APP_SECRET)
 
@@ -103,9 +128,10 @@ const loginSocialProvider = async (parent, args, context, info) => {
         loginErr
     )
 
-    const valid = user[provider] && (user[provider].socialID === userInfo.id)
+    const valid = (
+        user[provider] &&
+        (user[provider].socialID === userInfo.id))
     if (!valid) {
-        console.error(user, provider, user[provider], user[provider].socialID, userInfo.id)
         throw loginErr
     }
 

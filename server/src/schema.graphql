@@ -13,6 +13,7 @@ type SocialIDProviderInfo {
 
 enum Provider {
   facebook
+  google
   twitter
   linkedin
   github
@@ -26,6 +27,7 @@ type User {
   links: [Link!]!
   votes: [Vote!]!
   facebook: SocialIDProviderInfo
+  google: SocialIDProviderInfo
   twitter: SocialIDProviderInfo
   linkedin: SocialIDProviderInfo
   github: SocialIDProviderInfo
@@ -34,6 +36,7 @@ type User {
 
 fragment socialIDs on User {
   facebook
+  google
   twitter
   linkedin
   github

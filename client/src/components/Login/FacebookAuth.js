@@ -1,44 +1,33 @@
 import React from 'react'
 import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
 import { withRouter } from 'react-router'
 
 import { AUTH_TOKEN } from '../../constants'
+import {
+    SIGNUP_SOCIAL_MUTATION,
+    LOGIN_SOCIAL_MUTATION
+} from './mutations'
 
 const FACEBOOK_APP_ID = process.env.REACT_APP_FACEBOOK_APP_ID
 const FACEBOOK_API_VERSION = 'v3.1'
 
-
-const SIGNUP_MUTATION = gql`
-  mutation SignupMutation($provider: Provider!, $providerToken: String!) {
-    signupSocialProvider(provider: $provider, providerToken: $providerToken) {
-      token
-    }
-  }
-`
-
-const LOGIN_MUTATION = gql`
-  mutation LoginMutation($provider: Provider!, $providerToken: String!) {
-    loginSocialProvider(provider: $provider, providerToken: $providerToken) {
-      token
-    }
-  }
-`
-
 class FacebookAuth extends React.Component {
     componentWillMount = () => this._initializeFacebookSDK()
 
-    _initializeFacebookSDKScripts = (d, s, id) => {
+    _initializeFacebookSDKScripts = () => {
+        const id = 'facebook-jssdk'
+        const tag = 'script'
         let js
-        const fjs = d.getElementsByTagName(s)[0]
-        if (d.getElementById(id)) {
+        const fjs = window.document.getElementsByTagName(tag)[0]
+        if (window.document.getElementById(id)) {
             return
         }
-        js = d.createElement(s)
+        js = window.document.createElement(tag)
         js.id = id
         js.src = `https://connect.facebook.net/en_US/sdk.js`
         fjs.parentNode.insertBefore(js, fjs)
     }
+
     _initializeFacebookSDK() {
         console.log("Initizliaing facebook SDK.")
         window.fbAsyncInit = () =>
@@ -49,8 +38,7 @@ class FacebookAuth extends React.Component {
                 version: FACEBOOK_API_VERSION,
             })
 
-        this._initializeFacebookSDKScripts(window.document, 'script', 'facebook-jssdk')
-
+        this._initializeFacebookSDKScripts()
     }
 
     _handleFB = (mutation) =>
@@ -84,7 +72,7 @@ class FacebookAuth extends React.Component {
         const {login} = this.props
         return (
             <Mutation className="pointer mr2 button"
-                mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
+                mutation={login ? LOGIN_SOCIAL_MUTATION : SIGNUP_SOCIAL_MUTATION}
                 onCompleted={data => this._confirm(data)}
             >
                 {mutation => (

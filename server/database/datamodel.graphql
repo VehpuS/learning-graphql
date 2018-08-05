@@ -21,6 +21,7 @@ type User {
   links: [Link!]!
   votes: [Vote!]!
   facebook: SocialIDProviderInfo  @relation(name: "Facebook")
+  google: SocialIDProviderInfo  @relation(name: "Google")
   twitter: SocialIDProviderInfo @relation(name: "Twitter")
   linkedin: SocialIDProviderInfo @relation(name: "Linkedin")
   github: SocialIDProviderInfo @relation(name: "Github")

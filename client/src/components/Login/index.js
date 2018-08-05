@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
 import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
 
 import FacebookAuth from './FacebookAuth'
+import GoogleAuth from './GoogleAuth'
 import { AUTH_TOKEN } from '../../constants'
+import {
+    SIGNUP_PASSWORD_MUTATION,
+    LOGIN_PASSWORD_MUTATION
+} from './mutations'
 
 class Login extends Component {
     state = {
@@ -42,7 +46,7 @@ class Login extends Component {
                 </div>
                 <div className="flex mt3">
                     <Mutation
-                        mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
+                        mutation={login ? LOGIN_PASSWORD_MUTATION : SIGNUP_PASSWORD_MUTATION}
                         variables={{ email, password, name }}
                         onCompleted={data => this._confirm(data)}
                     >
@@ -53,6 +57,7 @@ class Login extends Component {
                         )}
                     </Mutation>
                     <FacebookAuth login={login} />
+                    <GoogleAuth login={login} />
                     <div
                         className="pointer button"
                         onClick={() => this.setState({ login: !login })}
@@ -75,21 +80,5 @@ class Login extends Component {
     }
 }
 
-
-const SIGNUP_MUTATION = gql`
-  mutation SignupMutation($email: String!, $password: String!, $name: String!) {
-    signupPassword(email: $email, password: $password, name: $name) {
-      token
-    }
-  }
-`
-
-const LOGIN_MUTATION = gql`
-  mutation LoginMutation($email: String!, $password: String!) {
-    loginPassword(email: $email, password: $password) {
-      token
-    }
-  }
-`
 
 export default Login
