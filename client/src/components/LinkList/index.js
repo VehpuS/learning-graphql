@@ -76,7 +76,7 @@ class LinkList extends Component {
 
     _nextPage = data => {
         const page = this._getPage()
-        if (page <= this._getTotalPages(data.feed.count)) {
+        if (page < this._getTotalPages(data.feed.count)) {
             const nextPage = page + 1
             this.props.history.push(`/new/${nextPage}`)
         }
