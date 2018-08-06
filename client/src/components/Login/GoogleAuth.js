@@ -9,7 +9,6 @@ import {
 } from './mutations'
 
 const GOOGLE_APP_ID = process.env.REACT_APP_GOOGLE_APP_ID
-console.log(GOOGLE_APP_ID)
 
 class GoogleAuth extends React.Component {
     componentWillMount = () => this._initializeGoogleAPI()
