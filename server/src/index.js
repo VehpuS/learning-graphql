@@ -37,6 +37,7 @@ const server = new GraphQLServer({
         // Start from https://github.com/prismagraphql/prisma/issues/2225
         requireResolversForResolveType: false,
     },
+    mocks: (appEnv === 'test') && {DateTime: () => new Date()},
     context: req => ({
         ...req,
         db: new Prisma({
@@ -53,4 +54,4 @@ server.express.use(compression())
 server.express.enable('trust proxy')
 server.express.use(new RateLimit(rateLimitConfig))
 
-server.start(() => console.log(`Server is running on http://localhost:4000`))
+server.start(({ port }) => console.log(`Server is running on http://localhost:${port}`))
